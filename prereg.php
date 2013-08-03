@@ -6,7 +6,7 @@
 <?php
 // 啟用 Session
 session_start();
-
+include ("configurations/page_configuration.php");
 // 將未登入者，導向至首頁
 $username=$_SESSION["username_ses"];
 $location=$_SESSION["location_ses"];
@@ -22,7 +22,7 @@ if ($_SESSION["progress_ses"] != 'r' && $_SESSION["progress_ses"] != 's'){
 	} else {
 	echo '<body onload="document.entry.start_parameter.focus()">';}
 ?>
-<h1 align="center">Valentine Project 2012</h1>
+<h1 align="center"><?php echo $page_TITLE;?></h1>
 <h3 align="center">
 Registration Form
 </h3>

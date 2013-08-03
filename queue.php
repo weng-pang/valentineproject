@@ -36,12 +36,12 @@ Methodology of Twin-Token System
 */
 
 
-function array_unique_merge() { 
-       $func_args = func_get_args();
-       return array_unique(call_user_func_array('array_merge', $func_args)); 
-   } 
 // Obtain location parameter
- $location = $_GET['location'];
+ if (isset($GET['location'])) {
+ 	$location = $_GET['location'];
+ } else {
+ 	$location = 0;
+ }
 //echo $location;
 //echo substr($location,1,1);
  if (substr($location,1,1) == "s"){
@@ -50,150 +50,8 @@ function array_unique_merge() {
 	$location = $location.'%';}
 //echo $location;
 // obtain all information from database
-	// 取得系統組態
-	include ("configure.php");
-	// 連結資料庫
-	include ("connect_db.php");
-	$p1 = array();
-	$p2 = array();
-	$p3 = array();
-	$p4 = array();
-	// Obtain P1
-	($location? $sql = "SELECT i.invoice_no FROM p1 p, invoices i WHERE p.invoice_no=i.invoice_no AND allocated_place LIKE '$location' ORDER BY invoice_no" : $sql = "SELECT invoice_no FROM p1 ORDER BY invoice_no");
-//echo '<br>'.$sql;
-	$rs = mysql_query($sql);
-	$num_rows_p1 = mysql_num_rows($rs);
+	include("controllers/fetch_progression.php");
 
-	for ( $i=0; $i<$num_rows_p1; $i++ ) {
-	$p1[] =  mysql_fetch_row($rs);}
-	
-	// Obtain P2
-	($location? $sql = "SELECT i.invoice_no FROM p2 p, invoices i WHERE p.invoice_no=i.invoice_no AND allocated_place LIKE '$location' ORDER BY invoice_no" : $sql = "SELECT invoice_no FROM p2 ORDER BY invoice_no");
-	$rs = mysql_query($sql);
-	$num_rows_p2 = mysql_num_rows($rs);
-	$p2[0] =  mysql_fetch_row($rs);
-	for ( $i=1; $i<$num_rows_p2; $i++ ) {
-	$p2[$i] =  mysql_fetch_row($rs);}
-	
-	// Obtain P3
-	($location? $sql = "SELECT i.invoice_no FROM p3 p, invoices i WHERE p.invoice_no=i.invoice_no AND allocated_place LIKE '$location' ORDER BY invoice_no" : $sql = "SELECT invoice_no FROM p3 ORDER BY invoice_no");
-	$rs = mysql_query($sql);
-	$num_rows_p3 = mysql_num_rows($rs);
-	$p3[0] =  mysql_fetch_row($rs);
-	for ( $i=1; $i<$num_rows_p3; $i++ ) {
-	$p3[$i] =  mysql_fetch_row($rs);}
-	
-	// Obtain P4
-	($location? $sql = "SELECT i.invoice_no FROM p4 p, invoices i WHERE p.invoice_no=i.invoice_no AND allocated_place LIKE '$location' ORDER BY invoice_no" : $sql = "SELECT invoice_no FROM p4 ORDER BY invoice_no");
-	$rs = mysql_query($sql);
-	$num_rows_p4 = mysql_num_rows($rs);
-	$p4[0] =  mysql_fetch_row($rs);
-	for ( $i=1; $i<$num_rows_p4; $i++ ) {
-	$p4[$i] =  mysql_fetch_row($rs);}
-	
-	// Obtain invoice information
-	($location? $sql = "SELECT invoice_no, start_time, end_time FROM invoices WHERE allocated_place LIKE '$location' ORDER BY invoice_no" : $sql = "SELECT invoice_no, start_time, end_time FROM invoices ORDER BY invoice_no");
-	$rs = mysql_query($sql);
-	$num_rows_invoice = mysql_num_rows($rs);
-	
-	for($i=0; $i<$num_rows_invoice; $i++) {
-	$invoice[$i] = mysql_fetch_row($rs);}
-	
-	date_default_timezone_set('Asia/Macao');
-	$current_time = time();
-	
-	// Convert Matrix to Array
-	
-	if ($p1[0][0] != null) $p1s[0] = $p1[0][0]; $p1s=array();
-	if ($p2[0][0] != null) $p2s[0] = $p2[0][0]; $p2s=array();
-	if ($p3[0][0] != null) $p3s[0] = $p3[0][0]; $p3s=array();
-	if ($p4[0][0] != null) $p4s[0] = $p4[0][0]; $p4s=array();
-	$pi = array();
-	
-	for($i=0; $i<$num_rows_p1; $i++) {
-		$p1s[] = $p1[$i][0];
-	}
-	for($i=0; $i<$num_rows_p2; $i++) {
-		$p2s[] = $p2[$i][0];
-	}
-	for($i=0; $i<$num_rows_p3; $i++) {
-		$p3s[] = $p3[$i][0];
-	}
-	for($i=0; $i<$num_rows_p4; $i++) {
-		$p4s[] = $p4[$i][0];
-	}
-	for($i=0; $i<sizeof($invoice); $i++) {
-		if ($invoice[$i][1] > '10000' ||$invoice[$i][2] > '10000' ){
-			$pi[] = $invoice[$i][0];
-		}
-	}
-	$p1 = $p1s;
-	$p2 = $p2s;
-	$p3 = $p3s;
-	$p4 = $p4s;
-	
-// analysis of obtained data
-	// Combine all POST Records
-	$ps = array_unique_merge($p1,$p2);
-	
-	$ps = array_unique_merge($ps,$p3);
-	
-	$ps = array_unique_merge($ps,$p4);
-	// Kick out P4 items from POST
-$ps_size = sizeof($ps);
-	for ($i=0; $i<$ps_size; $i++ ) {
-			for ($j=0; $j<sizeof($p4); $j++ ) {
-				if ($ps[$i] == $p4[$j] && (array_key_exists($i, $ps))){
-					unset($ps[$i]);
-					break;
-				}
-			}
-		}
-	$ps = array_values($ps);
-$ps_size = sizeof($ps);
-	// Kick out registered invoices from NRI list
-	for ($i=0; $i<$ps_size; $i++ ) {
-			for ($j=0; $j<sizeof($pi); $j++ ) {
-				if ($ps[$i] == $pi[$j] && (array_key_exists($i, $ps))){
-					unset($ps[$i]);
-					break;
-				}
-			}
-		}
-	asort($ps);
-	$ps = array_values($ps);
-	// Kick out P4 items from invoice list
-$invoice_size = sizeof($invoice);
-	for ($i=0; $i<$invoice_size; $i++ ) {
-			for ($j=0; $j<sizeof($p4); $j++ ) {
-				if ($invoice[$i][0] == $p4[$j] && (array_key_exists($i, $invoice))){
-					unset($invoice[$i]);
-					break;
-				}
-			}
-		}
-		$invoice = array_values($invoice);
-	// Show RI in time orders ( Always USE START as production, END for delivery)
-	$invoice_start = array();
-	$invoice_end = array();
-	for($i=0; $i<sizeof($invoice); $i++) {
-		$invoice_start[$i][0] = $invoice[$i][0];
-		$invoice_start[$i][1] = $invoice[$i][1];
-		$invoice_end[$i][0] = $invoice[$i][0];
-		$invoice_end[$i][1] = $invoice[$i][2];
-	}
-	
-//Test Platform
-/*
-print_r($ps);
-echo '<br>';
-print_r($pi);
-echo '<br>';
-print_r($invoice_start);
-echo '<br>';
-print_r($invoice_end);
-
-*/
 // Dislpay Platform
 echo '<html><head><meta http-equiv="refresh" content="20" ><link rel="stylesheet" type="text/css" href="info.css" /><title>Valentine Project Display Platform - Delivery Queues</title></head>
 <body><h1>DELIVERY QUEUES</h1>

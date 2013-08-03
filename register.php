@@ -86,8 +86,8 @@ switch($progress){
 }
 ?>
 </h3>
-<table  border=1 align=center><tr><td>
-<form method="post" name="entry" action="insert.php" align="middle" style="font-family:verdana;">
+<table  border=1 style="text-align: center"><tr><td>
+<form method="post" name="entry" action="insert.php"style="font-family:verdana;">
 Invoice Code:<input type="text" name="invoice_parameter" tabindex="1"><br>
 <input type="submit" name="b1" value="Enter" tabindex="2"><br>
 </form>
