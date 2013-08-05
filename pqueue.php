@@ -1,4 +1,7 @@
 <?php
+include ("configurations/page_configuration.php");
+echo '<html><head><meta http-equiv="refresh" content="20" ><link rel="stylesheet" type="text/css" href="info.css" /><title>Valentine Project Display Platform - Production Queues</title></head>
+<body>';
 /*
 =========================================================
 Kaugebra Aviation and Technology Service (KATS) 2012
@@ -50,8 +53,7 @@ if (substr($location,1,1) == "s"){
 	include("controllers/fetch_progression.php");
 	
 // Dislpay Platform
-echo '<html><head><meta http-equiv="refresh" content="20" ><link rel="stylesheet" type="text/css" href="info.css" /><title>Valentine Project Display Platform - Production Queues</title></head>
-<body><h1>PRODUCTION QUEUES</h1>
+'<h1>PRODUCTION QUEUES</h1>
 <table border="1"><tr><td>NRI</td><td>Allocated</td></tr><tr><td>
 <table border="0">';
 // PART 1: NRI

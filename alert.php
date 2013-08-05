@@ -1,4 +1,7 @@
 <?php
+include ("configurations/page_configuration.php");
+echo '<html><head><meta http-equiv="refresh" content="20" ><link rel="stylesheet" type="text/css" href="info.css" /><title>Valentine Project Display Platform - Production Queues</title></head>
+<body>';
 /*
 =========================================================
 Kaugebra Aviation and Technology Service (KATS) 2012
@@ -42,51 +45,12 @@ if (isset($_GET['location'])) {
 }
 
 // obtain all information from database
-	include ("configurations/page_configuration.php");
-	include("controllers/fetch_progression.php");
+	
+	include ("controllers/fetch_progression.php");
 
-// Display them respectively (test platform)
-/*
-	 print_r($p1);
-	 echo '<br>';
-	 print_r($p2);
-	 echo '<br>';
-	 print_r($p3);
-	 echo '<br>';
-	 print_r($p4);
-	 echo '<br>';
-	 print_r($p2_ir);
-	 echo '<br>';
-	 print_r($p3_ir);
-	 echo '<br>';
-	 print_r($invoice);
-	 echo '<br>startnow = ';
-	 print_r($startnow);
-	 echo '<br>start30 = ';
-	 print_r($start30);
-	 echo '<br>start60 = ';
-	 print_r($start60);
-	 echo '<br>endnow = ';
-	 print_r($endnow);
-	 echo '<br>end30 = ';
-	 print_r($end30);
-	 echo '<br>end60 = ';
-	 print_r($end60);
-        echo '<br>invoice list =';
-	 print_r($pt);
-
-
-echo '<br>';
-echo 'P1='.$num_rows_p1.'<br>';
-echo 'P2='.$num_rows_p2.'<br>';
-echo 'P3='.$num_rows_p3.'<br>';
-echo 'P4='.$num_rows_p4.'<br>';
-
-*/
 
 // Dislpay Platform
-echo '<html><head><meta http-equiv="refresh" content="20" ><link rel="stylesheet" type="text/css" href="info.css" /><title>Valentine Project Display Platform</title></head>
-<body><h1>PROGRESSION REPORT</h1><table><tr><td>
+echo '<h1>PROGRESSION REPORT</h1><table><tr><td>
 <h2>POST REGISTRATIONS</h2></td><td><h2>TIME ALERTS</h2></td></tr><td>
 <table border = 1>
 <tr><td>P1</td><td>P2</td><td>P3</td><td>P4</td></tr><tr><td>';
